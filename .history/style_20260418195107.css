@@ -1,0 +1,21 @@
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #222222;
+  padding: 10px;
+}
+
+.editor {
+  flex: 1;
+  padding: 20px;
+}
+
+#editorArea {
+  min-height: 400px;
+  border: 1px solid #1c19193e;
+  padding: 10px;
+}

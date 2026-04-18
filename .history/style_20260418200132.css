@@ -1,0 +1,37 @@
+body{
+    background-color: #29221D;
+}
+.app {
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  
+}
+
+.sidebar {
+  width: 250px;
+  background: #704B3C;
+  padding: 10px;
+}
+
+.editor {
+  flex: 1;
+  padding: 20px;
+}
+
+#editorArea {
+  min-height: 400px;
+  background-color: #F6CEA9;
+  border: 1px solid #9E5E3D;
+  padding: 10px;
+}
+#newPageBtn{
+ background-color: #D28048;
+ padding: 4px;
+ margin-top: 10px;
+}
+#pageTitle{
+    padding:5px;
+    background-color: #9E5E3D;
+    color: black;
+}

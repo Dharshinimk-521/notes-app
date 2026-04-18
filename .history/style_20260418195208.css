@@ -1,0 +1,26 @@
+body{
+    background-color: black;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #222222;
+  padding: 10px;
+}
+
+.editor {
+  flex: 1;
+  padding: 20px;
+}
+
+#editorArea {
+  min-height: 400px;
+  background-color: #222222;
+  border: 1px solid #2a6c9e3e;
+  padding: 10px;
+}
