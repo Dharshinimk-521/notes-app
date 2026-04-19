@@ -144,3 +144,21 @@ font-size:18px;
   border: none;
   cursor: pointer;
 }
+.icon-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 18px;
+    color: #333;
+    transition: 0.2s;
+}
+
+.icon-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.icon-btn i {
+    pointer-events: none; /* important so click works smoothly */
+}
