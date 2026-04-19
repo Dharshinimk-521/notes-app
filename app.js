@@ -113,8 +113,7 @@ function changeFontSize(step){
   document.execCommand("fontSize", false, currentFontSize);
 }
 //adding image files to the text area
-const imageInput = document.getElementById("imageInput");
-const editor= document.getElementById("editorArea");
+
 
 window.addEventListener("DOMContentLoaded", () => {
   const imageInput = document.getElementById("imageInput");
@@ -169,6 +168,99 @@ function changeFont(type) {
 function exportPDF() {
   window.print();
 }
+//summarize option
+function summarisePage() {
+  const editor=document.getElementById("editorArea");
+  const rawText=editor.innerText.trim();
+  if(!rawText){
+    alert('theres nth to summarise!');
+    return;
+  }
+  //split by . ? !
+  const sentences =rawText
+    .split(/[.!?]+/) // split at . ! or ? (+ means one or more in a row)
+    .map(s => s.trim()) //trim whitepace of each sentance
+    .filter(s => s.length>0); // remove empty strings left over
+  
+  if (sentences.length ===0){
+    alert("no sentences found!");
+    return;
+
+  }
+  //take only 3 sentences adnd join
+  const summary = sentences.slice(0,3).join(". ")+"." // slice(0,3) = items at index 0, 1, 2
+  // If a summary box already exists on the page, remove it before making a new one
+  const existing = document.getElementById("summaryBox");
+  if (existing) existing.remove();                            // prevents duplicate boxes stacking up
+
+  // Create a new div element in memory (not on the page yet)
+  const box = document.createElement("div");
+  box.id = "summaryBox";                                      // give it an id so we can find/remove it later
+  box.innerHTML=`
+  <div class="summary-header">
+  <strong>Summary</strong>
+  <button onclick="document.getElementById('summaryBox').remove()">X</button>
+  </div>
+  <p>${summary}</p>
+  `;
+  editor.parentElement.parentElement.appendChild(box);//appends to parent ele of editore = editor- container
+  //apears below the editor area
+};
+//auto-link detection
+function linkify(){
+  const editor=document.getElementById("editorArea");
+  const urlRegex = /((https?:\/\/|www\.)[^\s<>"']+)/g;
+  //walk through each link to spot the url
+  const walker = document.createTreeWalker(
+    editor,
+    NodeFilter.SHOW_TEXT,
+    null
+  );
+  const nodesToReplace =[]; //collects matches first the replace after walking
+  let node;
+  while((node=walker.nextNode())){
+    if(node.parentElement.tagName==='A') continue; //skip if <a>tag
+    if (urlRegex.test(node.textContent)){
+      nodesToReplace.push(node);//queue it for replacement
+    }
+    urlRegex.lastIndex=0; //reset regex pointer after each test
+  }
+  nodesToReplace.forEach(textNode => {
+    const span=document.createElement("span");
+    //replace every url with <a> tag
+    span.innerHTML=textNode.textContent.replace(urlRegex,(url) =>{
+      //if it dont start with http add https;// so it works
+      const href=url.startsWith("http") ? url : "https://" + url;
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+
+    });
+    //swap the original with the new link
+    textNode.parentNode.replaceChild(span,textNode);
+  });
+  saveCurrentPage();
+
+}
+//page clean format : removes all the black.white strips when cpy paste part
+document.getElementById("editorArea").addEventListener("paste", function(e) {
+  e.preventDefault();
+  const plainText =e.clipboardData.getData("text/plain");
+  document.execCommand("insertText",false,plainText);
+  linkify();
+});
+//link styling---
+const linkStyle = document.createElement("style");
+linkStyle.textContent = `
+  #editorArea a {
+    color: #1a73e8;          /* Google-style blue */
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  #editorArea a:hover {
+    color: #0d47a1;          /* darker blue on hover */
+  }
+`;
+document.head.appendChild(linkStyle);
 // Event listeners
 document.getElementById("newPageBtn").onclick = createPage;
 document.getElementById("editorArea").addEventListener("input", saveCurrentPage);
