@@ -165,6 +165,10 @@ function changeFont(type) {
 
   saveCurrentPage(); // optional persistence
 }
+//export as pdf
+function exportPDF() {
+  window.print();
+}
 // Event listeners
 document.getElementById("newPageBtn").onclick = createPage;
 document.getElementById("editorArea").addEventListener("input", saveCurrentPage);
